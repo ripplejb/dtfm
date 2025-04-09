@@ -53,14 +53,20 @@ func main() {
 		response += r.Response
 		return nil
 	}); err != nil {
-		fmt.Fprintf(os.Stderr, "Error generating response: %v\n", err)
+		_, err := fmt.Fprintf(os.Stderr, "Error generating response: %v\n", err)
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 
 	// Get the executable's directory
 	exePath, err := os.Executable()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error getting executable path: %v\n", err)
+		_, err := fmt.Fprintf(os.Stderr, "Error getting executable path: %v\n", err)
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 	exeDir := filepath.Dir(exePath)
@@ -69,13 +75,19 @@ func main() {
 	configPath := filepath.Join(exeDir, "dtfm_config.yaml")
 	configFile, err := os.ReadFile(configPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading config file at %s: %v\n", configPath, err)
+		_, err := fmt.Fprintf(os.Stderr, "Error reading config file at %s: %v\n", configPath, err)
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 
 	var config Config
 	if err := yaml.Unmarshal(configFile, &config); err != nil {
-		fmt.Fprintf(os.Stderr, "Error parsing config file: %v\n", err)
+		_, err := fmt.Fprintf(os.Stderr, "Error parsing config file: %v\n", err)
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 
